@@ -36,17 +36,16 @@ options = optimoptions('fmincon','SpecifyObjectiveGradient',true);
 w = fmincon(@(w)objectiveFunctionWithGradient(w,params),w0,A,b,Aeq,beq,...
     lb,ub,nonlcon,options);
 
-disp(w)
 disp(['Final Objective: ' ...
     num2str(objectiveFunctionWithGradient(w,params))])
 
 %% Post Processing for Generating Histograms
 
-[~,~,L_init] = generateMatricesFromWeights(w0,params.gridSize);
+[A_init,D_init,L_init] = generateMatricesFromWeights(w0,params.gridSize);
 [~,diag_lambda_init] = eig(L_init + params.eps*eye(length(L_init)));
 lambda_init = diag(diag_lambda_init);
 
-[~,~,L_final] = generateMatricesFromWeights(w,params.gridSize);
+[A_final,D_final,L_final] = generateMatricesFromWeights(w,params.gridSize);
 [~,diag_lambda_final] = eig(L_final + params.eps*eye(length(L_final)));
 lambda_final = diag(diag_lambda_final);
 
