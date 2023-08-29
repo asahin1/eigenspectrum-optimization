@@ -12,8 +12,15 @@ params.minWeight = 0.2;     % Constraint for weights
 w0 = ones(params.gridSize*(params.gridSize-1)*2,1); % Initial guess, same 
                                                     % as the initial state
                                                     % of the graph
-disp(['Initial Objective: ' ...
+
+% objFuncHandle = @objectiveFunctionWithGradient;
+objFuncHandle = @altObjectiveFunctionWithGradient;
+
+disp(['Initial Objective (old): ' ...
     num2str(objectiveFunctionWithGradient(w0,params))])
+
+disp(['Initial Objective (alt): ' ...
+    num2str(altObjectiveFunctionWithGradient(w0,params))])
 
 % No linear inequality constraints
 A = [];
@@ -33,11 +40,14 @@ nonlcon = [];
 % Use options for utilizing the known gradient
 options = optimoptions('fmincon','SpecifyObjectiveGradient',true);
 
-w = fmincon(@(w)objectiveFunctionWithGradient(w,params),w0,A,b,Aeq,beq,...
+w = fmincon(@(w)objFuncHandle(w,params),w0,A,b,Aeq,beq,...
     lb,ub,nonlcon,options);
 
-disp(['Final Objective: ' ...
+disp(['Final Objective (old): ' ...
     num2str(objectiveFunctionWithGradient(w,params))])
+
+disp(['Final Objective (alt): ' ...
+    num2str(altObjectiveFunctionWithGradient(w,params))])
 
 %% Post Processing for Generating Histograms
 
