@@ -7,8 +7,8 @@ for i=1:length(omega)
     sum_final = 0;
     for j=1:length(lambda_init)
     % for j=50:50
-        sum_init = sum_init + (params.a*sqrt(lambda_init(j))/(pi*((omega(i)-sqrt(lambda_init(j)))^2 + params.a^2*lambda_init(j))));
-        sum_final = sum_final + (params.a*sqrt(lambda_final(j))/(pi*((omega(i)-sqrt(lambda_final(j)))^2 + params.a^2*lambda_final(j))));
+        sum_init = sum_init + exp(-(1/params.a)*(omega(i)/sqrt(lambda_init(j)) - 1)^2);
+        sum_final = sum_final + exp(-(1/params.a)*(omega(i)/sqrt(lambda_final(j))-1)^2);
     end
     pdf_val_exact_init(i) = sum_init;
     pdf_val_exact_final(i) = sum_final;
@@ -19,10 +19,10 @@ L_init_eps = L_init + params.eps*eye(length(L_init));
 pdf_val_matrix_final = zeros(length(omega),1);
 L_final_eps = L_final + params.eps*eye(length(L_final));
 for i=1:length(omega)
-    % pdf_val_matrix_init(i) = 1000/((norm(omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)),"fro")^2+1));
-    % pdf_val_matrix_final(i) = 1000/((norm(omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)),"fro")^2+1));
-    pdf_val_matrix_init(i) = 10^(-6)*trace(((omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2+1)^-1);
-    pdf_val_matrix_final(i) = 10^(-7)*trace(((omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2+1)^-1);
+    % pdf_val_matrix_init(i) = 10^11*trace(exp(-1/params.a^2 * (omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2));
+    % pdf_val_matrix_final(i) = 10^8*trace(exp(-1/params.a^2 * (omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2));
+    pdf_val_matrix_init(i) = exp(-1/params.a^2 * norm(omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2);
+    pdf_val_matrix_final(i) = exp(-1/params.a^2 * norm(omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2);
 end
 
 figure()

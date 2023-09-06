@@ -3,7 +3,7 @@ clc; clear all;
 %% Some parameters
 params.gridSize = 10;
 params.a = 0.1;             % Coefficient a of the objective function
-params.eps = 0.2;           % Small dampening added to the laplacian before
+params.eps = 0.1;           % Small dampening added to the laplacian before
                             % computing the eigenvalues
 params.minWeight = 0.2;     % Constraint for weights
 
