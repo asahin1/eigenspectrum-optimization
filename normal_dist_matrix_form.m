@@ -1,5 +1,5 @@
 
-omega = linspace(0.1,sqrt(lambda_init(end))+10,100);
+omega = linspace(0.1,sqrt(lambda_init(end))+10,1000);
 pdf_val_exact_init = zeros(length(omega),1);
 pdf_val_exact_final = zeros(length(omega),1);
 for i=1:length(omega)
@@ -19,10 +19,10 @@ L_init_eps = L_init + params.eps*eye(length(L_init));
 pdf_val_matrix_final = zeros(length(omega),1);
 L_final_eps = L_final + params.eps*eye(length(L_final));
 for i=1:length(omega)
-    % pdf_val_matrix_init(i) = 10^11*trace(exp(-1/params.a^2 * (omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2));
-    % pdf_val_matrix_final(i) = 10^8*trace(exp(-1/params.a^2 * (omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2));
-    pdf_val_matrix_init(i) = exp(-1/params.a^2 * norm(omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2);
-    pdf_val_matrix_final(i) = exp(-1/params.a^2 * norm(omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2);
+    pdf_val_matrix_init(i) = 10^11*trace(exp(-1/params.a^2 * (omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2));
+    pdf_val_matrix_final(i) = 10^8*trace(exp(-1/params.a^2 * (omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2));
+    % pdf_val_matrix_init(i) = exp(-1/params.a^2 * norm(omega(i)*L_init_eps^(-1/2)-eye(length(L_init_eps)))^2);
+    % pdf_val_matrix_final(i) = exp(-1/params.a^2 * norm(omega(i)*L_final_eps^(-1/2)-eye(length(L_final_eps)))^2);
 end
 
 figure()
