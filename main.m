@@ -5,7 +5,7 @@ params.gridSize = 10;
 params.a = 0.1;             % Coefficient a of the objective function
 params.eps = 0.1;           % Small dampening added to the laplacian before
                             % computing the eigenvalues
-params.minWeight = 0.2;     % Constraint for weights
+params.minWeight = 0.1;     % Constraint for weights
 
 %% Initialization
 
@@ -15,12 +15,16 @@ w0 = ones(params.gridSize*(params.gridSize-1)*2,1); % Initial guess, same
 
 % objFuncHandle = @objectiveFunctionWithGradient;
 objFuncHandle = @altObjectiveFunctionWithGradient;
+% objFuncHandle = @objWithNewDist;
 
 disp(['Initial Objective (old): ' ...
     num2str(objectiveFunctionWithGradient(w0,params))])
 
 disp(['Initial Objective (alt): ' ...
     num2str(altObjectiveFunctionWithGradient(w0,params))])
+
+disp(['Initial Objective (mean omega_0): ' ...
+    num2str(objWithNewDist(w0,params))])
 
 % No linear inequality constraints
 A = [];
@@ -49,6 +53,9 @@ disp(['Final Objective (old): ' ...
 disp(['Final Objective (alt): ' ...
     num2str(altObjectiveFunctionWithGradient(w,params))])
 
+disp(['Final Objective (mean omega_0): ' ...
+    num2str(objWithNewDist(w,params))])
+
 %% Post Processing for Generating Histograms
 
 [A_init,D_init,L_init] = generateMatricesFromWeights(w0,params.gridSize);
@@ -63,12 +70,15 @@ figure()
 subplot(2,1,1)
 hist_init = histogram(lambda_init,10);
 maxFreq = max(hist_init.BinCounts);
+maxEig = max(max(lambda_init),max(lambda_final));
+xlim([-1,maxEig+1])
 ylim([0,maxFreq])
 title("Initial spectrum")
 xlabel("Eigenvalue")
 ylabel("Frequency")
 subplot(2,1,2)
-hist_final = histogram(lambda_final,10);
+hist_final = histogram(lambda_final,hist_init.BinEdges);
+xlim([-1,maxEig+1])
 ylim([0,maxFreq])
 title("Final spectrum")
 xlabel("Eigenvalue")
