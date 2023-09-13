@@ -14,8 +14,9 @@ w0 = ones(params.gridSize*(params.gridSize-1)*2,1); % Initial guess, same
                                                     % of the graph
 
 % objFuncHandle = @objectiveFunctionWithGradient;
-objFuncHandle = @altObjectiveFunctionWithGradient;
+% objFuncHandle = @altObjectiveFunctionWithGradient;
 % objFuncHandle = @objWithNewDist;
+objFuncHandle = @multiDOFObj;
 
 disp(['Initial Objective (old): ' ...
     num2str(objectiveFunctionWithGradient(w0,params))])
@@ -25,6 +26,9 @@ disp(['Initial Objective (alt): ' ...
 
 disp(['Initial Objective (mean omega_0): ' ...
     num2str(objWithNewDist(w0,params))])
+
+disp(['Initial Objective (multiDOF): ' ...
+    num2str(multiDOFObj(w0,params))])
 
 % No linear inequality constraints
 A = [];
@@ -42,7 +46,7 @@ ub = inf*ones(length(w0),1);
 nonlcon = [];
 
 % Use options for utilizing the known gradient
-options = optimoptions('fmincon','SpecifyObjectiveGradient',true);
+options = optimoptions('fmincon','SpecifyObjectiveGradient',false,"MaxFunctionEvaluations",100000);
 
 w = fmincon(@(w)objFuncHandle(w,params),w0,A,b,Aeq,beq,...
     lb,ub,nonlcon,options);
@@ -55,6 +59,9 @@ disp(['Final Objective (alt): ' ...
 
 disp(['Final Objective (mean omega_0): ' ...
     num2str(objWithNewDist(w,params))])
+
+disp(['Final Objective (multiDOF): ' ...
+    num2str(multiDOFObj(w,params))])
 
 %% Post Processing for Generating Histograms
 
