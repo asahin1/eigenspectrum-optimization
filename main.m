@@ -46,7 +46,7 @@ ub = inf*ones(length(w0),1);
 nonlcon = [];
 
 % Use options for utilizing the known gradient
-options = optimoptions('fmincon','SpecifyObjectiveGradient',false,"MaxFunctionEvaluations",100000);
+options = optimoptions('fmincon','SpecifyObjectiveGradient',false,"MaxFunctionEvaluations",5000);
 
 w = fmincon(@(w)objFuncHandle(w,params),w0,A,b,Aeq,beq,...
     lb,ub,nonlcon,options);
@@ -74,7 +74,7 @@ lambda_init = diag(diag_lambda_init);
 lambda_final = diag(diag_lambda_final);
 
 figure()
-subplot(2,1,1)
+subplot(1,2,1)
 hist_init = histogram(lambda_init,10);
 maxFreq = max(hist_init.BinCounts);
 maxEig = max(max(lambda_init),max(lambda_final));
@@ -83,10 +83,13 @@ ylim([0,maxFreq])
 title("Initial spectrum")
 xlabel("Eigenvalue")
 ylabel("Frequency")
-subplot(2,1,2)
+subplot(1,2,2)
 hist_final = histogram(lambda_final,hist_init.BinEdges);
 xlim([-1,maxEig+1])
 ylim([0,maxFreq])
 title("Final spectrum")
 xlabel("Eigenvalue")
 ylabel("Frequency")
+set(gcf,'position',[10,10,1500,300])
+ax=gcf;
+exportgraphics(ax,"myplot.png","Resolution",600)
